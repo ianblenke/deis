@@ -57,10 +57,22 @@ setting                                      description
 /deis/router/gzipTypes                       nginx gzipTypes setting (default: "application/x-javascript application/xhtml+xml application/xml application/xml+rss application/json text/css text/javascript text/plain text/xml")
 /deis/router/sslCert                         cluster-wide SSL certificate
 /deis/router/sslKey                          cluster-wide SSL private key
+/deis/router/proxyProtocol                   port for a proxy_protocol http listener for connection from an upstream tcp PROXY aware load balancer like AWS ELB
+/deis/router/setRealIpFrom                   CIDR of a VPC netblock, used by proxyProtocol to detect upstream ELB load balancers
 /deis/services/*                             healthy application containers reported by deis/publisher
 /deis/store/gateway/host                     host of the store gateway component (set by store-gateway)
 /deis/store/gateway/port                     port of the store gateway component (set by store-gateway)
 =======================================      ==================================================================================================================================================================================================================================================================================================================================
+
+Preparing for AWS ELB tcp proxy_protocol
+----------------------------------------
+
+This will enable tcp proxy_protocol connections on port 8080:
+
+.. code-block:: console
+
+    $ echo 8080 | etcdctl set /deis/router/proxyProtocol
+    $ curl -s http://169.254.169.254/latest/meta-data/network/interfaces/macs/$(curl -s http://169.254.169.254/latest/meta-data/network/interfaces/macs/ | head -1)/vpc-ipv4-cidr-block | etcdctl set /deis/router/setRealIpFrom
 
 Using a custom router image
 ---------------------------
