@@ -64,7 +64,7 @@ mkdir -p $BUILD_DIR $CACHE_DIR
 TMP_DIR=$(mktemp -d --tmpdir=$BUILD_DIR)
 
 cd $REPO_DIR
-git archive $GIT_SHA | tar -xmC $TMP_DIR
+git ls-files --cached --full-name --no-empty-directory -z $GIT_SHA | tar cf - -T - --null |  tar -xmC $TMP_DIR
 
 # switch to app context
 cd $TMP_DIR
