@@ -64,13 +64,12 @@ mkdir -p $BUILD_DIR $CACHE_DIR
 TMP_DIR=$(mktemp -d --tmpdir=$BUILD_DIR)
 
 cd $REPO_DIR
-git clone $REPO_DIR/ "${TMP_DIR}.raw/"
-pushd "${TMP_DIR}.raw"
-export GIT_DIR="${TMP_DIR}.raw/.git" GIT_WORK_TREE="${TMP_DIR}.raw"
+git clone $REPO_DIR/ "$TMP_DIR/"
+pushd "$TMP_DIR"
+export GIT_DIR="$TMP_DIR/.git" GIT_WORK_TREE="$TMP_DIR"
 git config core.bare false
-git checkout $(git branch -a | tail -1)
-( echo .git; git ls-tree --full-name -z -r --name-only  $GIT_SHA ) | tar cf - -T - --null | tar -xmC $TMP_DIR
-rm -fr "${TMP_DIR}.raw"
+git reset --hard $GIT_SHA
+( echo .git; git ls-tree --full-name -z -r --name-only $GIT_SHA ) | tar cf - -T - --null | tar -xmC "$TMP_DIR"
 popd
 
 # switch to app context
