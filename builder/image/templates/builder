@@ -56,7 +56,7 @@ mkdir -p $BUILD_DIR $CACHE_DIR
 TMP_DIR=$(mktemp -d --tmpdir=$BUILD_DIR)
 
 cd $REPO_DIR
-git clone $REPO_DIR/ "$TMP_DIR/"
+git clone --depth=1 $REPO_DIR/ "$TMP_DIR/"
 
 # switch to app context
 cd $TMP_DIR
